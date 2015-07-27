@@ -2,6 +2,7 @@
 
 require 'open-uri'
 require 'nokogiri'
+require 'json'
 
 url = 'https://en.wiktionary.org/wiki/Wiktionary:Frequency_lists/Finnish_wordlist'
 
@@ -16,33 +17,47 @@ def scrape_source(url)
   words
 end
 
-def scrape_translation(word_list)
-  finnish_german = []
-  word_list.each do |word|
-    adr = URI.escape('http://defi.dict.cc/?s=' + word)
+def scrape_translation(file)
+  my_file = JSON.parse(File.read(file))
+  all_words = []
+  my_file.each do |k, v|
+    adr = URI.escape('http://defi.dict.cc/?s=' + k)
     html = open(adr)
 
     doc = Nokogiri::HTML(html)
-    doc.css('#maincontent .td7nl').each {|tag| finnish_german << tag.content }
-
+    doc.css('#maincontent .td7nl').each {|tag| all_words << tag.content }
   end
-  Hash[*finnish_german.flatten(1)]
+  Hash[*all_words]
 end
 
-def write_to_file(hash)
-  finnish_vocab = File.new("vocab.html", "w+")
+def write_to_file(hash, file)
+  finnish_vocab = File.new(file, "w+")
 
-  hash.each do |k, v|
-    File.open("vocab.html", "a+") { |file| file.write("<meta http-equiv='Content-Type' content='text/html; charset=utf-8' /><p>#{k} = #{v}</p>") }
-  end
+  json = hash.to_json
+
+  File.open(file, "a+") { |f| f.write(json)}
   finnish_vocab.close
 end
 
+def start_list_to_h(array_of_words)
+  hashed_words = Hash.new
+
+  array_of_words.each do |word|
+    hashed_words[word] = ""
+  end
+  hashed_words
+end
+
+
 words = scrape_source(url)
 
-dictionary = scrape_translation(words)
+hashed_start_list = start_list_to_h(words[0..20])
 
-write_to_file(dictionary)
+write_to_file(hashed_start_list, 'vocab.txt')
+
+dictionary = scrape_translation('vocab.txt')
+
+write_to_file(dictionary, 'vocab.txt')
 
 
 
