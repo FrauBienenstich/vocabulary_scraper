@@ -17,26 +17,24 @@ def scrape_source(url)
   words
 end
 
-def scrape_translation(file)
-  my_file = JSON.parse(File.read(file))
+def scrape_translation(filename)
+  my_file = JSON.parse(File.read(filename))
   all_words = []
   my_file.each do |k, v|
-    adr = URI.escape('http://defi.dict.cc/?s=' + k)
-    html = open(adr)
+    if v == ""
+      adr = URI.escape('http://defi.dict.cc/?s=' + k)
+      html = open(adr)
 
-    doc = Nokogiri::HTML(html)
-    doc.css('#maincontent .td7nl').each {|tag| all_words << tag.content }
+      doc = Nokogiri::HTML(html)
+      doc.css('#maincontent .td7nl').each {|tag| all_words << tag.content }
+    end
   end
   Hash[*all_words]
 end
 
-def write_to_file(hash, file)
-  finnish_vocab = File.new(file, "w+")
-
+def write_to_file(hash, filename)
   json = hash.to_json
-
-  File.open(file, "a+") { |f| f.write(json)}
-  finnish_vocab.close
+  File.open(filename, "w") { |f| f.write(json)}
 end
 
 def start_list_to_h(array_of_words)
@@ -48,16 +46,20 @@ def start_list_to_h(array_of_words)
   hashed_words
 end
 
-
 words = scrape_source(url)
 
-hashed_start_list = start_list_to_h(words[0..20])
-
-write_to_file(hashed_start_list, 'vocab.txt')
-
-dictionary = scrape_translation('vocab.txt')
+dictionary = start_list_to_h(words)
+#puts "DICT 1 #{dictionary}"
 
 write_to_file(dictionary, 'vocab.txt')
+
+dictionary = scrape_translation('vocab.txt')
+#puts "DICT 2 #{dictionary}"
+
+write_to_file(dictionary, 'vocab.txt')
+
+#TODO rescue errors?
+
 
 
 
