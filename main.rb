@@ -8,14 +8,12 @@ require 'nokogiri'
 require 'json'
 
 
-@preparator = Preparator.new('https://en.wiktionary.org/wiki/Wiktionary:Frequency_lists/Finnish_wordlist', 'vocab.txt')
+preparator = Preparator.new('https://en.wiktionary.org/wiki/Wiktionary:Frequency_lists/Finnish_wordlist', 'vocab.txt')
 
-words = @preparator.scrape_source
-dictionary = @preparator.start_list_to_h(words[0..10])
-@writer = Writer.new('vocab.txt')
-@writer.write_to_file(dictionary)
-
-@translator = Translator.new('vocab.txt')
-
+words = preparator.scrape_source
+dictionary = preparator.start_list_to_h(words)
+writer = Writer.new
+writer.write_to_file(dictionary, 'vocab.txt')
+translator = Translator.new('vocab.txt')
 dictionary = @translator.translate
-@writer.write_to_file(dictionary)
+writer.write_to_file(dictionary, 'vocab.txt')
