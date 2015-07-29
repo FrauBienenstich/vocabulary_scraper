@@ -15,5 +15,5 @@ dictionary = preparator.start_list_to_h(words)
 writer = Writer.new
 writer.write_to_file(dictionary, 'vocab.txt')
 translator = Translator.new('vocab.txt')
-dictionary = @translator.translate
+dictionary = translator.translate
 writer.write_to_file(dictionary, 'vocab.txt')
