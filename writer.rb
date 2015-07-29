@@ -1,18 +1,25 @@
 class Writer
-  attr_reader :filename
-  def initialize(filename)
-    @filename = filename
+  attr_reader
+  def initialize
   end
 
-  def write_to_file(hash)
-    json = hash.to_json
-    File.open(self.filename, "w") { |f| f.write(json)}
+  def write_to_file(text, filename)
+    if text.class == "Hash"
+      converted = text.to_json
+    else
+      converted = text
+    end
+    File.open(filename, "w") { |f| f.write(converted)}
   end
 
   def make_nice(filename)
     my_file = JSON.parse(File.read(filename))
+    words = []
     my_file.each do |k, v|
-      puts "<!DOCTYPE html><html><head><meta charset='UTF-8'></head><body><p>#{k} = #{v}</p></body>"
+      words << "<p>#{k} " + "= " + "#{v}</p>" 
     end
+    words = words.join(', ').gsub(",","")
+    "<!DOCTYPE html><html><head><meta charset='UTF-8'></head><body>#{words}</body>"
   end
+
 end
