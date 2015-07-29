@@ -4,11 +4,8 @@ class Writer
   end
 
   def write_to_file(text, filename)
-    if text.class == "Hash"
-      converted = text.to_json
-    else
-      converted = text
-    end
+    converted = text.to_json.gsub!(/\A"|"\Z/, '')
+
     File.open(filename, "w") { |f| f.write(converted)}
   end
 
