@@ -8,12 +8,11 @@ class Translator
   def translate
     my_file = JSON.parse(File.read(self.filename))
     all_words = []
-
     my_file.each do |k, v|
       if v == ""
         begin
           adr = URI.escape('http://defi.dict.cc/?s=' + k)
-          html = open(adr)#hier error catchen? und zwischenresult speichern
+          html = open(adr)
 
           doc = Nokogiri::HTML(html)
           doc.css('#maincontent .td7nl').each {|tag| all_words << tag.content }
@@ -26,7 +25,8 @@ class Translator
           all_words
         end
       end 
-      Hash[*all_words]
     end
+    Hash[*all_words]
   end
+
 end
