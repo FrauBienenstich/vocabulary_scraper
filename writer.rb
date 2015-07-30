@@ -21,11 +21,13 @@ class Writer
     my_file = JSON.parse(File.read(filename))
     words = []
     my_file.each do |k, v|
-      words << "<p>#{k} " + "= " + "#{v}</p>" 
+      words << "<tr><td>#{k}</td><td>#{v}</td></tr>" 
     end
+
     string = words.join(', ')
     words = sanitize(string)
     "<!DOCTYPE html><html><head><meta charset='UTF-8'></head><body>#{words}</body>"
+    "<!DOCTYPE html><html><head><meta charset='UTF-8'><link rel='stylesheet' type='text/css' href='styles.css'></head><body><table style='width:100%'><tr><td><b>Finnish</b></td><td><b>German</b></td></tr>#{words}</table></body>"
   end
 
 end
