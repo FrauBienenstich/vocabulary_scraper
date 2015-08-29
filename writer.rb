@@ -4,8 +4,7 @@ class Writer
   end
 
   def write_to_file(text, filename)
-    converted = text.to_json.gsub!(/\A"|"\Z/, '')
-
+    converted = text.to_json#.gsub!(/\A"|"\Z/, '') removed quotation mark in the beginning and end
     File.open(filename, "w") { |f| f.write(converted)}
   end
 

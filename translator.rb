@@ -6,7 +6,8 @@ class Translator
   end
 
   def translate
-    my_file = JSON.parse(File.read(self.filename))
+    read_file = File.read(self.filename)
+    my_file = JSON.parse(read_file)
     all_words = []
     my_file.each do |k, v|
       if v == ""

@@ -7,7 +7,6 @@ require 'open-uri'
 require 'nokogiri'
 require 'json'
 
-
 preparator = Preparator.new('https://en.wiktionary.org/wiki/Wiktionary:Frequency_lists/Finnish_wordlist', 'vocab.txt')
 
 words = preparator.scrape_source
