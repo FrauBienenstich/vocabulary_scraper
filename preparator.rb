@@ -26,6 +26,3 @@ class Preparator
     hashed_words
   end
 end
-
-
-
